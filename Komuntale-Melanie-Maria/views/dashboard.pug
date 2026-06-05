@@ -1,0 +1,33 @@
+extends layout
+block content
+  .videos-page
+    header.videos-header
+      a.logo(href="/")
+        span.logo-icon ▶
+        span.logo-text Videx
+      a.btn-add(href="/videos/add") Add Video
+
+    main
+      h2.section-title Videos
+      
+
+      if videos.length === 0
+        .no-videos
+          p No videos yet. Be the first to add one!
+
+      else
+        .videos-grid
+          each video in videos
+            a.video-card(href=`/videos/${video.id}`)
+              .video-thumb
+                if video.thumbnail
+                  img(src=`/uploads/${video.thumbnail}` alt=video.title)
+                else
+                  .thumb-placeholder
+              .video-info
+                h3.video-title= video.title
+                .video-meta
+                  span= video.views.toLocaleString() + 'k views'
+                  span.dot ·
+                  span= new Date(video.createdAt).toLocaleDateString('en-US', {year:'numeric',month:'short',day:'numeric'})
+              button.video-menu(onclick="event.preventDefault()") ⋮

@@ -1,0 +1,78 @@
+extends layout
+
+block content
+  .upload-page
+    header.upload-header
+      a.back-btn(href="/videos")
+        span ←
+        span  Back
+    
+    main.upload-main
+      h1 Upload your video
+
+      if success
+        .success-banner
+          span.success-icon 
+          span  Video uploaded successfully!
+
+      form#upload-form(action="/videos/add" method="POST" enctype="multipart/form-data" novalidate)
+        .form-grid
+          .form-left
+            .form-group
+              input#title(
+                type="text"
+                name="title"
+                placeholder="Video Title"
+                value=(old && old.title ? old.title : '')
+                class=(errors.title ? 'error' : '')
+              )
+              if errors.title
+                span.field-error= errors.title
+
+            .form-group
+              textarea#description(name="description" placeholder="Description (Optional)")= (old && old.description ? old.description : '')
+
+            .form-group
+              .select-wrap
+                select#quality(
+                  name="quality"
+                  class=(errors.quality ? 'error' : '')
+                )
+                  option(value="" disabled selected) Video quality
+                  option(value="360p" selected=(old && old.quality === '360p')) 360p
+                  option(value="720p" selected=(old && old.quality === '720p')) 720p
+                  option(value="1080p" selected=(old && old.quality === '1080p')) 1080p
+                span.select-arrow ∨
+              if errors.quality
+                span.field-error= errors.quality
+
+            .form-group
+              .date-wrap
+                input#publishDate(
+                  type="date"
+                  name="publishDate"
+                  placeholder="Date of Publishing"
+                  value=(old && old.publishDate ? old.publishDate : '')
+                  class=(errors.publishDate ? 'error' : '')
+                )
+                span.cal-icon 📅
+              if errors.publishDate
+                span.field-error= errors.publishDate
+
+          .form-right
+            .upload-video-box(onclick="document.getElementById('videoFile').click()")
+              input#videoFile(type="file" name="videoFile" accept="video/*" style="display:none")
+              .upload-icon ⬆
+              p Upload video
+              if errors.videoFile
+                span.field-error= errors.videoFile
+
+            .upload-thumb-box(onclick="document.getElementById('thumbnail').click()")
+              input#thumbnail(type="file" name="thumbnail" accept="image/*" style="display:none")
+              .thumb-preview-wrap
+                img#thumb-preview(src="" alt="" style="display:none")
+                .thumb-placeholder-content
+                  .upload-icon ⬆
+                  p Upload Thumbnail
+
+        button.btn-upload(type="submit") UPLOAD
