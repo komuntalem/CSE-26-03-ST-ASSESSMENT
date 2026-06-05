@@ -10,9 +10,13 @@ block content
         span.logo-text Videx
 
     main.watch-main
-      video.video-player(controls autoplay)
-        source(src=`/uploads/${video.videoFile}`)
-        | Your browser does not support the video tag.
+      if video.videoFile
+        video.video-player(controls autoplay)
+          source(src=`/uploads/${video.videoFile}`)
+          | Your browser does not support the video tag.
+      else
+        .watch-placeholder
+          p No video file is available for this preview.
 
       .watch-info
         h1.watch-title= video.title

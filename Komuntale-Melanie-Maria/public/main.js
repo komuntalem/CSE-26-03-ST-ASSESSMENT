@@ -45,6 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!el) return;
       el.addEventListener('input', () => clearError(el));
       el.addEventListener('change', () => clearError(el));
+      el.addEventListener('focus', () => {
+        if (!el.value || !el.value.trim()) {
+          showError(el, 'Required field');
+        }
+      });
+      el.addEventListener('blur', () => {
+        if (el.value && el.value.trim()) {
+          clearError(el);
+        }
+      });
     });
 
     form.addEventListener('submit', (e) => {
@@ -82,7 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
         valid = false;
       }
 
-      if (!valid) e.preventDefault();
+      if (!valid) {
+        e.preventDefault();
+      }
     });
   }
 

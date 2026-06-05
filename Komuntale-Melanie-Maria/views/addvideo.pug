@@ -22,27 +22,32 @@ block content
               input#title(
                 type="text"
                 name="title"
+                required
                 placeholder="Video Title"
                 value=(old && old.title ? old.title : '')
                 class=(errors.title ? 'error' : '')
               )
               if errors.title
                 span.field-error= errors.title
+                
 
             .form-group
+
               textarea#description(name="description" placeholder="Description (Optional)")= (old && old.description ? old.description : '')
 
             .form-group
+            
               .select-wrap
                 select#quality(
                   name="quality"
+                  required
                   class=(errors.quality ? 'error' : '')
                 )
                   option(value="" disabled selected) Video quality
                   option(value="360p" selected=(old && old.quality === '360p')) 360p
                   option(value="720p" selected=(old && old.quality === '720p')) 720p
                   option(value="1080p" selected=(old && old.quality === '1080p')) 1080p
-                span.select-arrow ∨
+                span.select-arrow ▼
               if errors.quality
                 span.field-error= errors.quality
 
@@ -51,11 +56,12 @@ block content
                 input#publishDate(
                   type="date"
                   name="publishDate"
+                  required
                   placeholder="Date of Publishing"
                   value=(old && old.publishDate ? old.publishDate : '')
                   class=(errors.publishDate ? 'error' : '')
                 )
-                span.cal-icon 📅
+                span.cal-icon 
               if errors.publishDate
                 span.field-error= errors.publishDate
 
@@ -75,4 +81,5 @@ block content
                   .upload-icon ⬆
                   p Upload Thumbnail
 
-        button.btn-upload(type="submit") UPLOAD
+        .form-actions
+          button.btn-upload(type="submit") UPLOAD

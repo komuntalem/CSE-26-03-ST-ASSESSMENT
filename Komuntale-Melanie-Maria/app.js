@@ -1,15 +1,47 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
+const multer = require('multer');
+const fs = require('fs');
 const path = require('path');
+const Video = require('./models/video');
+
 const app = express();
+
+// Create uploads folder if it doesn't exist
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, uploadsDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const safeName = `${file.fieldname}-${Date.now()}${ext}`;
+    cb(null, safeName);
+  },
+});
+
+const upload = multer({ storage });
 
 // Serve static files from public
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Set Pug as the templating engine
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
-const videos = [];
+const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/videx';
+
+mongoose.connect(mongoUri)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
+  });
 
 app.get('/', (req, res) => {
   res.redirect('/home');
@@ -23,7 +55,8 @@ app.get('/addvideo', (req, res) => {
   res.redirect('/videos/add');
 });
 
-app.get('/videos', (req, res) => {
+app.get('/videos', async (req, res) => {
+  const videos = await Video.find().sort({ createdAt: -1 });
   res.render('dashboard', { videos });
 });
 
@@ -31,8 +64,8 @@ app.get('/videos/add', (req, res) => {
   res.render('addvideo', { errors: {}, old: {} });
 });
 
-app.get('/videos/:id', (req, res) => {
-  const video = videos.find((item) => item.id === req.params.id);
+app.get('/videos/:id', async (req, res) => {
+  const video = await Video.findById(req.params.id);
   if (!video) {
     return res.status(404).send('Video not found');
   }
@@ -43,24 +76,38 @@ app.get('/dashboard', (req, res) => {
   res.redirect('/videos');
 });
 
-app.post('/videos/add', (req, res) => {
-  // For simplicity, we won't handle actual file uploads in this example
-  const { title, quality, publishDate } = req.body;
+app.post('/videos/add', upload.fields([
+  { name: 'videoFile', maxCount: 1 },
+  { name: 'thumbnail', maxCount: 1 },
+]), async (req, res) => {
+  const body = req.body || {};
+  const { title, description, quality, publishDate } = body;
+  const errors = {};
 
-  // Simple validation
-  if (!title || !quality || !publishDate) {
-    return res.status(400).render('addvideo', { errors: { title, quality, publishDate }, old: req.body });
+  if (!title) errors.title = 'Title is required';
+  if (!quality) errors.quality = 'Quality is required';
+  if (!publishDate) errors.publishDate = 'Publish date is required';
+
+  const videoFile = req.files?.videoFile?.[0];
+  const thumbnailFile = req.files?.thumbnail?.[0];
+
+  if (!videoFile) errors.videoFile = 'Video file is required';
+  if (!thumbnailFile) errors.thumbnail = 'Thumbnail is required';
+
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).render('addvideo', { errors, old: req.body });
   }
 
-  // Create a new video object (in a real app, you'd save this to a database)
-  const video = {
-    id: Date.now().toString(),
+  const video = new Video({
     title,
+    description,
     quality,
-    publishDate
-  };
+    publishDate,
+    videoFile: videoFile.filename,
+    thumbnail: thumbnailFile.filename,
+  });
 
-  videos.push(video);
+  await video.save();
   res.redirect('/videos');
 });
 

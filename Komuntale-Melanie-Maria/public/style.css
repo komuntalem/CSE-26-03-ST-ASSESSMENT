@@ -34,6 +34,13 @@ a {
   color: #f43737;
 }
 
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
 .logo-wrap {
   font-size: 2.5rem;
   font-weight: bold;
@@ -66,9 +73,9 @@ a {
   justify-content: center;
   padding: 0.75rem 2rem;
   font-size: 1.25rem;
-  width: 200px;
-  border: 2px solid #f43737;
-  border-radius: 999px;
+  width: 100px;
+  border: 1px solid #f43737;
+  border-radius: 0;
   background: #fff;
   color: #f43737;
   cursor: pointer;
@@ -78,6 +85,10 @@ a {
 .btn:hover {
   background: #f43737;
   color: white;
+}
+
+.btn-upload {
+  border-radius: 0;
 }
 
 .button-content {
@@ -108,7 +119,7 @@ a {
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   border: 2px solid #f43737;
-  border-radius: 999px;
+  border-radius: 0;
   background: white;
   color: #f43737;
   transition: all 0.2s ease;
@@ -217,6 +228,14 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.thumb-preview-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .thumb-placeholder-content {
@@ -227,16 +246,25 @@ a {
   color: #777;
 }
 
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
 .btn-upload {
-  width: 100%;
-  margin-top: 2rem;
-  padding: 1rem 1.5rem;
+  width: auto;
+  padding: 1rem 2rem;
   border: none;
   border-radius: 999px;
   background: #f43737;
   color: white;
   font-size: 1.1rem;
   cursor: pointer;
+}
+
+.btn-upload:hover {
+  background: #d72f2f;
 }
 
 .btn-upload:hover {
@@ -326,6 +354,20 @@ a {
   background: white;
   padding: 1.75rem;
   border-radius: 1.25rem;
+}
+
+.watch-placeholder {
+  width: 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff5f5;
+  color: #b03a2e;
+  border: 2px dashed #f5c6cb;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .watch-title {

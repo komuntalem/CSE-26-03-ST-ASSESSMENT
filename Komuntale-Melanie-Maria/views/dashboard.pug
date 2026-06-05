@@ -3,8 +3,9 @@ block content
   .videos-page
     header.videos-header
       a.logo(href="/")
-        span.logo-icon ▶
-        span.logo-text Videx
+        .logo-wrap
+          span.logo-icon ▶
+          span.logo-text Videx
       a.btn-add(href="/videos/add") Add Video
 
     main
@@ -13,7 +14,7 @@ block content
 
       if videos.length === 0
         .no-videos
-          p No videos yet. Be the first to add one!
+          p No videos 
 
       else
         .videos-grid
