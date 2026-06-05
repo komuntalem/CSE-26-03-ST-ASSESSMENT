@@ -36,7 +36,7 @@ block content
               textarea#description(name="description" placeholder="Description (Optional)")= (old && old.description ? old.description : '')
 
             .form-group
-            
+
               .select-wrap
                 select#quality(
                   name="quality"
@@ -72,6 +72,7 @@ block content
               p Upload video
               if errors.videoFile
                 span.field-error= errors.videoFile
+                
 
             .upload-thumb-box(onclick="document.getElementById('thumbnail').click()")
               input#thumbnail(type="file" name="thumbnail" accept="image/*" style="display:none")
@@ -80,6 +81,5 @@ block content
                 .thumb-placeholder-content
                   .upload-icon ⬆
                   p Upload Thumbnail
-
         .form-actions
           button.btn-upload(type="submit") UPLOAD

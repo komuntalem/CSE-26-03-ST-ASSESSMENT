@@ -151,8 +151,9 @@ a {
 
 .form-grid {
   display: grid;
-  gap: 1.5rem;
   grid-template-columns: 1.4fr 1fr;
+  column-gap: 5rem;
+  row-gap: 18rem;
   margin-top: 1.5rem;
 }
 
